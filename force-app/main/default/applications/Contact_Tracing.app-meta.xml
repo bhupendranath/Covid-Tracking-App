@@ -15,6 +15,6 @@
     <tabs>Location__c</tabs>
     <tabs>People_Tracing__c</tabs>
     <tabs>Location_Tracing__c</tabs>
-    <uiType>Lightning</uiType>
+    <uiType>Lightning</uiType><!--testComment-->
     <utilityBar>Contact_Tracing_UtilityBar</utilityBar>
 </CustomApplication>

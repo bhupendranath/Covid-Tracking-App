@@ -66,7 +66,7 @@ public with sharing class CTPersonController {
      * get count of people in each health status
      * @return Map<Health_Status__c, PersonIds>
      */
-    public static Map<String, Integer>  (){
+    public static Map<String, Integer> getHealthStatusCount(){
 
         Map<String, Integer> healthCountMap = new Map<String, Integer>();
         for(AggregateResult ar : [SELECT Health_Status__c,COUNT(Id) total 
@@ -84,5 +84,5 @@ public with sharing class CTPersonController {
     //Anonymous Window code
     //Map<String, Integer> healthCountMap = CTPersonController.getHealthStatusCount();
     //System.debug('Health Count Map'+healthCountMap);
-
+    
 }

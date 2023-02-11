@@ -84,5 +84,126 @@ public with sharing class CTPersonController {
     //Anonymous Window code
     //Map<String, Integer> healthCountMap = CTPersonController.getHealthStatusCount();
     //System.debug('Health Count Map'+healthCountMap);
-    
+
+    /**
+     * get all the cohabitants of a person
+     * which returns set of Ids of all cohabitants
+     * @return Set<Id>
+     * @param Set<Ids> for which we need to find cohabitants
+     */
+    public static Set<Id> getCohabitants(Set<Id> personIds, Set<Id> alreadyProcessed){
+
+        List<String> healthstatuses = new List<String>{'Green','Yellow'};
+        List<People_Tracing__c> peopleTraces = [SELECT Id, Person_1__c, Person_2__c FROM People_Tracing__c 
+                                                 WHERE (Person_1__c IN: personIds OR Person_2__c IN: personIds) 
+                                                 AND Contact_Type__c = 'Cohabitant'
+                                                 AND (Person_1__r.Health_Status__c IN: healthstatuses 
+                                                      OR Person_2__r.Health_Status__c IN: healthstatuses)];
+
+        Set<Id> cohabitants = new Set<Id>();
+        for(People_Tracing__c pt: peopleTraces){
+            if(!alreadyProcessed.contains(pt.Person_1__c)){
+                cohabitants.add(pt.Person_1__c);
+                alreadyProcessed.add(pt.Person_1__c);
+            }
+            if(!personIds.contains(pt.Person_2__c)){
+                cohabitants.add(pt.Person_2__c);
+                alreadyProcessed.add(pt.Person_2__c);
+            }
+        }
+
+        return cohabitants;
+    }
+
+    /**
+     * get all the neighbours of a person
+     * which returns set of Ids of all neighbours
+     * @return Set<Id>
+     * @param Set<Ids> for which we need to find neighbours
+     */
+    public static Set<Id> getNeighbours(Set<Id> personIds, Set<Id> alreadyProcessed){
+
+        //List<String> healthstatuses = new List<String>{'Green','Yellow'};
+        List<People_Tracing__c> peopleTraces = [SELECT Id, Person_1__c, Person_2__c FROM People_Tracing__c 
+                                                 WHERE (Person_1__c IN: personIds OR Person_2__c IN: personIds) 
+                                                 AND Contact_Type__c = 'Neighbour'
+                                                 AND (Person_1__r.Health_Status__c = 'Green'
+                                                      OR Person_2__r.Health_Status__c ='Green')];
+
+        Set<Id> neighbours = new Set<Id>();
+        for(People_Tracing__c pt: peopleTraces){
+            if(!alreadyProcessed.contains(pt.Person_1__c)){
+                neighbours.add(pt.Person_1__c);
+                alreadyProcessed.add(pt.Person_1__c);
+            }
+            if(!personIds.contains(pt.Person_2__c)){
+                neighbours.add(pt.Person_2__c);
+                alreadyProcessed.add(pt.Person_2__c);
+            }
+        }
+
+        return neighbours;
+    }
+
+    /**
+     * get all the primary contacts of a person
+     * which returns set of Ids of all primary contacts
+     * @return Set<Id>
+     * @param Set<Ids> for which we need to find primary contacts
+     */
+    public static Set<Id> getPrimaryContacts(Set<Id> personIds, Set<Id> alreadyProcessed){
+
+        List<String> healthstatuses = new List<String>{'Green','Yellow'};
+        List<People_Tracing__c> peopleTraces = [SELECT Id, Person_1__c, Person_2__c FROM People_Tracing__c 
+                                                 WHERE (Person_1__c IN: personIds OR Person_2__c IN: personIds) 
+                                                 AND Contact_Type__c = 'Other'
+                                                 AND Contact_Date__c = LAST_N_DAYS:10
+                                                 AND (Person_1__r.Health_Status__c IN: healthstatuses
+                                                      OR Person_2__r.Health_Status__c IN: healthstatuses)];
+
+        Set<Id> primaryContacts = new Set<Id>();
+        for(People_Tracing__c pt: peopleTraces){
+            if(!alreadyProcessed.contains(pt.Person_1__c)){
+                primaryContacts.add(pt.Person_1__c);
+                alreadyProcessed.add(pt.Person_1__c);
+            }
+            if(!personIds.contains(pt.Person_2__c)){
+                primaryContacts.add(pt.Person_2__c);
+                alreadyProcessed.add(pt.Person_2__c);
+            }
+        }
+
+        return primaryContacts;
+    }
+
+    /**
+     * get all the secondary contacts of a person
+     * which returns set of Ids of all secondary contacts
+     * @return Set<Id>
+     * @param Set<Ids> for which we need to find secondary contacts
+     */
+    public static Set<Id> getSecondaryContacts(Set<Id> primaryContactIds, Set<Id> alreadyProcessed){
+
+        List<String> healthstatuses = new List<String>{'Green','Yellow'};
+        List<People_Tracing__c> peopleTraces = [SELECT Id, Person_1__c, Person_2__c FROM People_Tracing__c 
+                                                 WHERE (Person_1__c IN: primaryContactIds OR Person_2__c IN: primaryContactIds) 
+                                                 AND Contact_Type__c = 'Other'
+                                                 AND Contact_Date__c = LAST_N_DAYS:10
+                                                 AND (Person_1__r.Health_Status__c IN: healthstatuses
+                                                      OR Person_2__r.Health_Status__c IN: healthstatuses)];
+
+        Set<Id> secondaryContacts = new Set<Id>();
+        for(People_Tracing__c pt: peopleTraces){
+            if(!alreadyProcessed.contains(pt.Person_1__c)){
+                secondaryContacts.add(pt.Person_1__c);
+                alreadyProcessed.add(pt.Person_1__c);
+            }
+            if(!primaryContactIds.contains(pt.Person_2__c)){
+                secondaryContacts.add(pt.Person_2__c);
+                alreadyProcessed.add(pt.Person_2__c);
+            }
+        }
+
+        return secondaryContacts;
+    }
 }

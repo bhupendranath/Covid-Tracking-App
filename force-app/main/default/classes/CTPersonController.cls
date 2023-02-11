@@ -66,6 +66,7 @@ public with sharing class CTPersonController {
      * get count of people in each health status
      * @return Map<Health_Status__c, PersonIds>
      */
+
     public static Map<String, Integer>  getHealthStatusCount(){
 
         Map<String, Integer> healthCountMap = new Map<String, Integer>();

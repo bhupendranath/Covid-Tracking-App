@@ -66,7 +66,8 @@ public with sharing class CTPersonController {
      * get count of people in each health status
      * @return Map<Health_Status__c, PersonIds>
      */
-    public static Map<String, Integer> getHealthStatusCount(){
+
+    public static Map<String, Integer>  getHealthStatusCount(){
 
         Map<String, Integer> healthCountMap = new Map<String, Integer>();
         for(AggregateResult ar : [SELECT Health_Status__c,COUNT(Id) total 
@@ -88,7 +89,7 @@ public with sharing class CTPersonController {
     /**
      * get all the cohabitants of a person
      * which returns set of Ids of all cohabitants
-     * @return Set<Id> cohabitant
+     * @return Set<Id>
      * @param Set<Ids> for which we need to find cohabitants
      */
     public static Set<Id> getCohabitants(Set<Id> personIds, Set<Id> alreadyProcessed){
@@ -203,7 +204,3 @@ public with sharing class CTPersonController {
                 alreadyProcessed.add(pt.Person_2__c);
             }
         }
-
-        return secondaryContacts;
-    }
-}

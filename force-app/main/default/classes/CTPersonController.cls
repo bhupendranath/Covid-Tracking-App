@@ -88,7 +88,7 @@ public with sharing class CTPersonController {
     /**
      * get all the cohabitants of a person
      * which returns set of Ids of all cohabitants
-     * @return Set<Id>
+     * @return Set<Id> cohabitant
      * @param Set<Ids> for which we need to find cohabitants
      */
     public static Set<Id> getCohabitants(Set<Id> personIds, Set<Id> alreadyProcessed){

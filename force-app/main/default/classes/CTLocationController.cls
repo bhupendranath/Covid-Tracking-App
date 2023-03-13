@@ -100,4 +100,20 @@ public with sharing class CTLocationController {
         }
     }
 
+    //get counts of location for each Status
+    // this mehtos with called in Aura controller class
+    public static Map<String, Integer> getLocationStatusCount(){
+        AggregateResult[] healthCountMap = [SELECT Status__c, COUNT(Id) locationCount FROM Location__c GROUP BY Status__c];
+
+        if(healthCountMap != null & healthCountMap.size() > 0){
+            //final map to return aggragate list
+            Map<String, Integer> result = new Map<String, Integer>();
+            for(AggregateResult ar : healthCountMap){
+                result.put(String.valueOf(ar.get('Status__c')), Integer.valueOf(ar.get('locationCount')));
+            }
+
+            return result;
+        }
+        return null;
+    }   
 }

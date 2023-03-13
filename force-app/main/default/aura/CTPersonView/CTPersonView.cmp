@@ -1,0 +1,30 @@
+<aura:component controller="CTPersonViewController">
+    <!--Attribute to store recordId,Status and fields array : we will get record Id from App. Event-->
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="status" type="String" />
+    <aura:attribute name="fields" type="String[]"
+        default="['Name','Mobile__c','Token__c','Health_Status__c','Status_Update_Date__c']" />
+
+    <!--Handling CTLocationSelectEvent app event-->
+    <aura:handler event="c:CTPersonSelectEvent" action="{!c.personSelectHandler}" />
+
+    <!--Using aura:if to only display when it has recordId, otherwise when It's blank we don't display-->
+    <aura:if isTrue="{! !empty(v.recordId)}">
+        <!--Using class="{!v.status}" : we are getting Status(Green/Orange/Yellow/Red) from record and assigning properties in CSS file-->
+        <div class="{!v.status + ' person-card'}">
+            <lightning:layout multipleRows="true">
+                <lightning:layoutItem size="12" padding="around-small">
+                    <!--we need to display data in recordform in read-only mode-->
+                    <lightning:recordForm recordId="{!v.recordId}" objectApiName="Person__c" fields="{!v.fields}"
+                        columns="1" mode="readonly" />
+                </lightning:layoutItem>
+                <aura:if isTrue="{!v.status != 'Red'}">
+                    <lightning:layoutItem size="12" padding="around-small">
+                        <lightning:button label="Update Status To Red" variant="destructive"
+                            title="Update Status To Red" onclick="{! c.updateStatus }" />
+                    </lightning:layoutItem>
+                </aura:if>
+            </lightning:layout>
+        </div>
+    </aura:if>
+</aura:component>

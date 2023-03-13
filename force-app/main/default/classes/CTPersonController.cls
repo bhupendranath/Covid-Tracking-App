@@ -66,8 +66,7 @@ public with sharing class CTPersonController {
      * get count of people in each health status
      * @return Map<Health_Status__c, PersonIds>
      */
-
-    public static Map<String, Integer>  getHealthStatusCount(){
+    public static Map<String, Integer> getHealthStatusCount(){
 
         Map<String, Integer> healthCountMap = new Map<String, Integer>();
         for(AggregateResult ar : [SELECT Health_Status__c,COUNT(Id) total 
@@ -204,3 +203,25 @@ public with sharing class CTPersonController {
                 alreadyProcessed.add(pt.Person_2__c);
             }
         }
+        
+        return secondaryContacts;
+    }
+
+    //get count of people for each health_Status
+    //this methos same as getHealthStatusCount method
+    public static Map<String, Integer> getHealthStatusCountAura(){
+        AggregateResult[] healthCountMap = [SELECT Health_Status__c, COUNT(Id) personCount FROM Person__c GROUP BY Health_Status__c];
+
+        if(healthCountMap != null & healthCountMap.size() > 0){
+            //final map to return aggragate list
+            Map<String, Integer> result = new Map<String, Integer>();
+            for(AggregateResult ar : healthCountMap){
+                result.put(String.valueOf(ar.get('Health_Status__c')), Integer.valueOf(ar.get('personCount')));
+            }
+
+            return result;
+        }
+        return null;
+    }
+
+}

@@ -9,7 +9,7 @@
 public with sharing class CTLocationController {
     
     /**
-     * get recent Location heath changes
+     * get recent Location heath changes.
      * @return List<Location__c>
      */
     public static List<Location__c> getRecentStatusChanges(){

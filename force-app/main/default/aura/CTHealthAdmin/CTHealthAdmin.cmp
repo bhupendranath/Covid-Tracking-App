@@ -1,0 +1,41 @@
+<aura:component implements="force:appHostable">
+
+    <!--scope attr will store selected tab Id-->
+    <aura:attribute name="scope" type="String" default="person" />
+
+    <!--headerTitle attr used to change the title-->
+    <aura:attribute name="headerTitle" type="String" default="Person View" />
+    <div class="container">
+        <lightning:layout multipleRows="true">
+            <lightning:layoutItem size="12">
+                <c:CTHealthHeader headerTitle="{!v.headerTitle}" scope="{!v.scope}" aura:id="health-header" />
+            </lightning:layoutItem>
+            <lightning:layoutItem size="12">
+                <lightning:tabset onselect="{!c.tabSelectHandler}" variant="vertical">
+                    <lightning:tab label="Person View" id="person">
+                        <!--we using lightning layout comp. here to controll width of both of the child component-->
+                        <lightning:layout>
+                            <lightning:layoutItem size="8" padding="horizantal-small">
+                                <c:CTRecentChanges scope="person" />
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="4" padding="horizantal-small">
+                                <c:CTPersonView />
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </lightning:tab>
+                    <lightning:tab label="Location View" id="location">
+                        <!--we using lightning layout comp. here to controll width of both of the child component-->
+                        <lightning:layout>
+                            <lightning:layoutItem size="8" padding="horizantal-small">
+                                <c:CTRecentChanges scope="location" />
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="4" padding="horizantal-small">
+                                <c:CTLocationView />
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </lightning:tab>
+                </lightning:tabset>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </div>
+</aura:component>

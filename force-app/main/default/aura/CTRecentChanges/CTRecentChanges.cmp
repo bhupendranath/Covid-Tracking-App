@@ -1,0 +1,25 @@
+<aura:component controller="CTRecentChangesController">
+    <aura:attribute name="issearching" type="Boolean" default="false" />
+    <aura:attribute name="data" type="List" />
+    <aura:attribute name="columns" type="List" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <!--Attribute to display data dynamically-->
+    <aura:attribute name="scope" type="String" default="person" />
+
+    <!--Setting intial response, to utilised when user enter search with blank value :253
+      and calling it in helper class-->
+    <aura:attribute name="initialResponse" type="List" />
+
+    <lightning:card title="Recent Updates">
+        <aura:set attribute="actions">
+            <div onkeyup="{! c.handleKeyUp }">
+                <lightning:input name="search" label="Hit 'enter' to search" aura:id="enter-search"
+                    isLoading="{!v.issearching }" type="search" placeholder="Search here..." />
+            </div>
+        </aura:set>
+        <lightning:datatable keyField="id" data="{!v.data }" columns="{!v.columns }" hideCheckboxColumn="true"
+            onrowaction="{! c.handleRowAction }" />
+    </lightning:card>
+</aura:component>
